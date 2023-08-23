@@ -54,6 +54,11 @@ public class SellerDashboard extends JFrame implements ActionListener {
         setLayout(new BorderLayout());
         add(sidebar, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
+        // Add action listeners to sidebar buttons
+sellAllButton.addActionListener(this);
+recentSaleButton.addActionListener(this);
+productAllButton.addActionListener(this);
+sellerWages.addActionListener(this);
 
         
 
@@ -89,7 +94,7 @@ public class SellerDashboard extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==sellAllButton)
 		{
-            switchToBodyPanel(new AdvertisementPanel());
+            switchToBodyPanel(new SellProduct());
         }
         else if(e.getSource()==recentSaleButton)
 		{
@@ -101,7 +106,7 @@ public class SellerDashboard extends JFrame implements ActionListener {
         }
         else if(e.getSource()==sellerWages)
 		{
-            switchToBodyPanel(new AdvertisementPanel());
+            switchToBodyPanel(new SellProduct());
         }
     }
 

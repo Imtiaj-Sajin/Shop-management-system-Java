@@ -1,0 +1,20 @@
+Laptop,899.99,50,Electronics,1001
+Smartphone,599.00,75,Electronics,1002
+T-shirt,19.99,198,Clothing,1003
+Backpack,39.95,150,Accessories,1004
+Sneakers,89.99,100,Shoes,1005
+Coffee Maker,49.99,30,Appliances,1006
+Headphones,149.99,80,Electronics,1007
+Jeans,34.95,120,Clothing,1008
+Watch,199.00,60,Accessories,1009
+Blender,69.95,40,Appliances,1010
+TV,799.99,25,Electronics,1011
+Dress,59.99,90,Clothing,1012
+Sunglasses,129.00,70,Accessories,1013
+Toaster,24.95,55,Appliances,1014
+Gaming Console,299.00,15,Electronics,1015
+Skirt,29.95,85,Clothing,1016
+Wallet,49.99,110,Accessories,1017
+Microwave,89.95,18,Appliances,1018
+Speaker,119.99,45,Electronics,1019
+Hat,14.99,180,Accessories,1020

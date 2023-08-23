@@ -28,7 +28,7 @@ public class DashboardWithSidebar extends JFrame {
         JButton sellerUpdateButton = createSidebarButton("Seller Update", "images/update.png");
         JButton sellerAddButton = createSidebarButton("Seller Add", "images/add.png");
         JButton sellerDeleteButton = createSidebarButton("Seller Delete", "images/bin.png");
-        JButton settingsButton = createSidebarButton("Settings", "images/settings.png");
+        JButton logOutButton = createSidebarButton("logOut", "images/logOut.png");
 
         sidebar.setLayout(new GridLayout(0, 1));
         sidebar.add(productAllButton);
@@ -37,7 +37,7 @@ public class DashboardWithSidebar extends JFrame {
         sidebar.add(sellerUpdateButton);
         sidebar.add(sellerAddButton);
         sidebar.add(sellerDeleteButton);
-        sidebar.add(settingsButton);
+        sidebar.add(logOutButton);
 
         // Set a default body panel
         currentBodyPanel = new JPanel();
@@ -94,11 +94,13 @@ public class DashboardWithSidebar extends JFrame {
                 headerLabel.setText("Seller Add");
             }
         });
-        settingsButton.addActionListener(new ActionListener() {
+        logOutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                switchToBodyPanel(new AdvertisementPanel());
                 headerLabel.setText("Log Out");
+                setVisible(false);
+                new LoginGUI();
+
             }
         });
         sellerUpdateButton.addActionListener(new ActionListener() {
@@ -127,34 +129,6 @@ public class DashboardWithSidebar extends JFrame {
 
     }
 
-     private void reduceProductQuantityInFile(String productName, int quantityToReduce) {
-        try {
-            RandomAccessFile file = new RandomAccessFile("products.txt", "rw");
-
-            String line;
-            long pointer = 0;
-            while ((line = file.readLine()) != null) {
-                String[] productInfo = line.split(",");
-                if (productInfo.length >= 5 && productInfo[0].equalsIgnoreCase(productName)) {
-                    int currentQuantity = Integer.parseInt(productInfo[2]);
-                    int newQuantity = currentQuantity - quantityToReduce;
-                    if (newQuantity < 0) {
-                        newQuantity = 0;
-                    }
-                    productInfo[2] = Integer.toString(newQuantity);
-                    String updatedLine = String.join(",", productInfo);
-                    file.seek(pointer);
-                    file.writeBytes(updatedLine + System.lineSeparator());
-                    break;
-                }
-                pointer = file.getFilePointer();
-            }
-
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private JButton createSidebarButton(String text, String iconPath) {
         JButton button = new JButton(text, new ImageIcon(iconPath));

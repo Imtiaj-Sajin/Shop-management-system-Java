@@ -14,35 +14,50 @@ public class SellerAddPanel extends JPanel {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public SellerAddPanel() {
+        Font labelFont = new Font("Tahoma", Font.PLAIN, 18); 
+        Font fieldFont = new Font("Tahoma", Font.PLAIN, 16); 
+
         setLayout(new BorderLayout());
-        setBackground(new Color(240, 240, 240)); // Light gray background
-
+        setBackground(new Color(240, 240, 240)); 
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(Color.WHITE); // White background
-
+        mainPanel.setBackground(Color.WHITE); 
         JPanel inputPanel = new JPanel(new GridLayout(7, 2, 10, 10));
         inputPanel.setBackground(Color.WHITE);
 
-        JLabel nameLabel = new JLabel("Seller Name:");
+        JLabel nameLabel = new JLabel(" Seller Name:");
+        nameLabel.setFont(labelFont); 
         JTextField nameField = new JTextField();
+        nameField.setFont(fieldFont);
 
-        JLabel userIdLabel = new JLabel("User ID:");
+        JLabel userIdLabel = new JLabel(" User ID:");
+        userIdLabel.setFont(labelFont); 
         JTextField userIdField = new JTextField();
+        userIdField.setFont(fieldFont);
 
-        JLabel passwordLabel = new JLabel("Password:");
+        JLabel passwordLabel = new JLabel(" Password:");
+        passwordLabel.setFont(labelFont);
         JPasswordField passwordField = new JPasswordField();
+        passwordField.setFont(fieldFont);
 
-        JLabel birthdateLabel = new JLabel("Birthdate:");
+        JLabel birthdateLabel = new JLabel(" Birthdate:");
+        birthdateLabel.setFont(labelFont);
         JFormattedTextField birthdateField = new JFormattedTextField(new Date());
+        birthdateField.setFont(fieldFont);
 
-        JLabel addressLabel = new JLabel("Address:");
+        JLabel addressLabel = new JLabel(" Address:");
+        addressLabel.setFont(labelFont);
         JTextField addressField = new JTextField();
+        addressField.setFont(fieldFont);
 
-        JLabel phoneLabel = new JLabel("Phone Number:");
+        JLabel phoneLabel = new JLabel(" Phone Number:");
+        phoneLabel.setFont(labelFont);
         JTextField phoneField = new JTextField();
+        phoneField.setFont(fieldFont);
 
-        JLabel emailLabel = new JLabel("Email:");
+        JLabel emailLabel = new JLabel(" Email:");
+        emailLabel.setFont(labelFont);
         JTextField emailField = new JTextField();
+        emailField.setFont(fieldFont);
 
         inputPanel.add(nameLabel);
         inputPanel.add(nameField);

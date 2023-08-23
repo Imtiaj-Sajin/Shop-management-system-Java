@@ -83,7 +83,7 @@ public class LoginGUI implements ActionListener{
 			String user = uname.getText();
 			String pass = upass.getText();
 			//FOR SINGLE USER, NOT A SMART WAY!!
-			if(user.equals("Mazid") && pass.equals("1234"))
+			if(user.equals("s") && pass.equals("s"))
 			{
 				
 				new SellerDashboard();

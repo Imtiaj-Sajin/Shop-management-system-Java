@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdvertisementPanel extends JPanel {
+public class SellProduct extends JPanel {
 
     private DefaultTableModel defaultTableModel1;
     private DefaultTableModel defaultTableModel2;
@@ -29,9 +29,8 @@ public class AdvertisementPanel extends JPanel {
         JLabel phoneLabel = new JLabel("Customer Phone:");
         JTextField phoneField = new JTextField();
 
-    public AdvertisementPanel() {
+    public SellProduct() {
         setLayout(new BorderLayout());
-
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel customerPanel = new JPanel(new GridLayout(3, 2, 10, 10));
@@ -41,7 +40,6 @@ public class AdvertisementPanel extends JPanel {
         cartPanel.setBackground(Color.RED);
         JPanel checkoutPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         checkoutPanel.setBackground(Color.BLUE);
-
 
 
         JLabel searchLabel = new JLabel("Search Product:");
@@ -59,12 +57,10 @@ public class AdvertisementPanel extends JPanel {
         JButton minusButton = new JButton("-");
         JButton plusButton = new JButton("+");
 
-        // Create the defaultTableModel1 here
         defaultTableModel1 = new DefaultTableModel(new String[]{"Name", "Price", "Quantity", "Category", "Id"}, 0);
         JTable defaultTableView1 = new JTable(defaultTableModel1);
         JScrollPane tableScrollPane1 = new JScrollPane(defaultTableView1);
 
-        // Create the defaultTableModel2 here
         defaultTableModel2 = new DefaultTableModel(new String[]{"Name", "Price", "Quantity", "Category", "Id"}, 0);
         JTable defaultTableView2 = new JTable(defaultTableModel2);
         JScrollPane tableScrollPane2 = new JScrollPane(defaultTableView2);
@@ -122,7 +118,6 @@ public class AdvertisementPanel extends JPanel {
             }
         });
 
-        // Plus button listener
         plusButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -132,7 +127,6 @@ public class AdvertisementPanel extends JPanel {
             }
         });
 
-        // Add to Cart button listener
         addToCartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -140,6 +134,7 @@ public class AdvertisementPanel extends JPanel {
                 if (selectedRow >= 0) {
                     String productName = (String) defaultTableModel1.getValueAt(selectedRow, 0);
                     int quantity = Integer.parseInt(quantityField.getText());
+                    //reduceProductQuantityInFile(productName, quantity );
 
                     Object[] rowData = new Object[defaultTableModel1.getColumnCount()];
                     for (int col = 0; col < defaultTableModel1.getColumnCount(); col++) {
@@ -167,43 +162,59 @@ public class AdvertisementPanel extends JPanel {
                     reduceProductQuantityInFile(productName, quantityToReduce);
                     s=formatMatchingProductData(defaultTableModel2);
                 }
-                JOptionPane.showMessageDialog(null, s, "Checkout", JOptionPane.INFORMATION_MESSAGE);
+                //JOptionPane.showMessageDialog(null, s, "Checkout", JOptionPane.INFORMATION_MESSAGE);
+                switchToBodyPanel(new OrderDetails(s));
+
             }
         });
-        // Read product data from file and populate the table
         readProductsFromFile(defaultTableModel1);
     }
-private void reduceProductQuantityInFile(String productName, int quantityToReduce) {
-        try {
-            File inputFile = new File("products.txt");
-            File tempFile = new File("temp.txt");
-
-            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-
+    private void reduceProductQuantityInFile(String productName, int quantityToReduce) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("products.txt"));
+             BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt"))) {
+    
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] productInfo = line.split(",");
-                if (productInfo.length >= 5 && productInfo[0].equalsIgnoreCase(productName)) {
-                    int currentQuantity = Integer.parseInt(productInfo[2]);
-                    int newQuantity = currentQuantity - quantityToReduce;
-                    if (newQuantity < 0) {
-                        newQuantity = 0;
+                String[] parts = line.split(",");
+                if (parts.length >= 3 && parts[0].equals(productName)) {
+                    int currentQuantity = Integer.parseInt(parts[2]);
+                    int updatedQuantity = (currentQuantity - quantityToReduce);
+                    if (updatedQuantity < 0) {
+                        updatedQuantity = 0; // Ensure quantity doesn't go negative
+                                                            JOptionPane.showMessageDialog(this, updatedQuantity, "Success", JOptionPane.INFORMATION_MESSAGE);
+
                     }
-                    productInfo[2] = Integer.toString(newQuantity);
-                    line = String.join(",", productInfo);
+                    line = parts[0] + "," + parts[1] + "," + updatedQuantity+","+parts[3] + ","+parts[4];
+                                    JOptionPane.showMessageDialog(this, updatedQuantity, "Success", JOptionPane.INFORMATION_MESSAGE);
+
                 }
-                writer.write(line + System.getProperty("line.separator"));
+                writer.write(line);
+                writer.newLine();
             }
-
-            writer.close();
-            reader.close();
-
-            tempFile.renameTo(inputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    replaceOriginalFileWithTempFile();
+    
     }
+    private void replaceOriginalFileWithTempFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("temp.txt"));
+             BufferedWriter writer = new BufferedWriter(new FileWriter("products.txt"))) {
+    
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        // Delete the temporary file after replacing the original file
+        File tempFile = new File("temp.txt");
+        //tempFile.delete();
+    }
+    
      private void searchAndDisplayProduct(String searchTerm) {
         for (int row = 0; row < defaultTableModel1.getRowCount(); row++) {
             String productName = (String) defaultTableModel1.getValueAt(row, 0);
@@ -218,7 +229,7 @@ private void reduceProductQuantityInFile(String productName, int quantityToReduc
 
                 defaultTableModel2.addRow(rowData);
                 //JOptionPane.showMessageDialog(this, "Product found and added to cart!", "Product Found", JOptionPane.INFORMATION_MESSAGE);
-                                JOptionPane.showMessageDialog(this, rowData[2], quantityField.getText(), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Product found and added to the cart", "Success", JOptionPane.INFORMATION_MESSAGE);
 
                 return; 
             }
@@ -249,50 +260,59 @@ private void reduceProductQuantityInFile(String productName, int quantityToReduc
             JFrame frame = new JFrame("Advertisement Panel");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(800, 600);
-            frame.add(new AdvertisementPanel());
+            frame.add(new SellProduct());
             frame.setVisible(true);
     });
 }
+
 public String formatMatchingProductData(DefaultTableModel defaultTableModel) {
     StringBuilder formattedData = new StringBuilder();
 
+        String name = nameField.getText();
+    String address = addressField.getText();
+    formattedData.append("Name:").append(name).append("<br>");
+    formattedData.append("Address: ").append(address).append("<br>");
+    String phone = addressField.getText();
+    formattedData.append("Phone: ").append(phone).append("<br>");
     // Append header
-    formattedData.append("id        \tname      \tprice     \tquantity        \tcost\n");
-    formattedData.append("_____________________________________________\n");
+    formattedData.append("name &nbsp; price &nbsp; quantity  &nbsp;  cost<br>");
+    formattedData.append("_____________________________________________<br>");
+    double price=0;
+    double cost=0;
 
-    // Iterate through rows in the table model
+    int qty=0;
     for (int row = 0; row < defaultTableModel.getRowCount(); row++) {
         String productName = (String) defaultTableModel.getValueAt(row, 0);
-            // Add row data to formattedData
-            for (int col = 0; col < defaultTableModel.getColumnCount(); col++) {
-                Object value = defaultTableModel.getValueAt(row, col);
-                if (value instanceof Integer) {
-                    formattedData.append((Integer) value).append("      \t");
-                } else if (value instanceof Double) {
-                    formattedData.append((Double) value).append("        \t");
-                } else {
-                    formattedData.append("-\t"); // Placeholder for non-numeric values
+            for (int col = 0; col < 4; col++) {
+                if(col!=3){
+
+                formattedData.append(defaultTableModel.getValueAt(row, col)).append("     &nbsp;");
+                if(col==1){
+                    Object value = defaultTableModel.getValueAt(row, col);
+                    String valueAsString = value.toString();
+                    price=Double.parseDouble(valueAsString);
+                }
+                if(col==2){
+                    Object value = defaultTableModel.getValueAt(row, col);
+                    String valueAsString = value.toString();
+                    qty=Integer.parseInt(valueAsString);
+
                 }
             }
-            formattedData.append("\n");
-
-            // Add name and address information
-            String name = nameField.getText();
-            String address = addressField.getText();
-            String phone = phoneField.getText();
-
-            formattedData.append("name:").append(name).append("\n");
-            formattedData.append("address:").append(address).append("\n");
-            formattedData.append("phone:").append(phone).append("\n");
-
-
-            // Add separator
-            formattedData.append("----------------------------\n");
-        }
-    
+            }
+            formattedData.append(price*qty+"<br>");
+            formattedData.append("<br>");
+            cost=cost+price*qty;
+    }
+    formattedData.append("<br>"+"Total cost: "+"<br>"+cost+"<br>");
 
     return formattedData.toString();
 }
 
-
+private void switchToBodyPanel(JPanel panel) {
+    removeAll();
+    add(panel, BorderLayout.CENTER);
+    revalidate();
+    repaint();
+}
 }
