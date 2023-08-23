@@ -14,6 +14,7 @@ public class DashboardWithSidebar extends JFrame {
         setSize(1000, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setVisible(true);
 
         // Create sidebar
         JPanel sidebar = new JPanel();
@@ -41,9 +42,14 @@ public class DashboardWithSidebar extends JFrame {
         // Set a default body panel
         currentBodyPanel = new JPanel();
         currentBodyPanel.setLayout(new BorderLayout());
-        JLabel defaultLabel = new JLabel("             have a nice day!                ");
-        defaultLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-        currentBodyPanel.add(defaultLabel, BorderLayout.CENTER);
+
+        ImageIcon imageIcon = new ImageIcon("images/TazGrocery.png"); // Provide the correct path
+        JLabel imageLabel = new JLabel(imageIcon);
+        currentBodyPanel.add(imageLabel, BorderLayout.CENTER);
+
+        // JLabel defaultLabel = new JLabel("             have a nice day!                ");
+        // defaultLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+        // currentBodyPanel.add(defaultLabel, BorderLayout.CENTER);
 
         // Create main content panel
         contentPanel = new JPanel(new BorderLayout());
@@ -70,6 +76,7 @@ public class DashboardWithSidebar extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switchToBodyPanel(new AddProductPanel());
+                headerLabel.setText("Product Add");
             }
         });
 
@@ -77,33 +84,45 @@ public class DashboardWithSidebar extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switchToBodyPanel(new DeleteProductPanel());
+                headerLabel.setText("Product Delete");
             }
         });
         sellerAddButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switchToBodyPanel(new SellerAddPanel());
+                headerLabel.setText("Seller Add");
             }
         });
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switchToBodyPanel(new AdvertisementPanel());
+                headerLabel.setText("Log Out");
             }
         });
         sellerUpdateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switchToBodyPanel(new SellerUpdatePanel());
+                headerLabel.setText("Seller Update");
+            }
+        });
+        sellerDeleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchToBodyPanel(new SellerDeletePanel());
+                headerLabel.setText("Seller Delete");
             }
         });
         // Add action listeners to sidebar buttons
-        productAllButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        switchToBodyPanel(new AllProductsPanel());
-    }
-});
+                productAllButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                switchToBodyPanel(new AllProductsPanel());
+                headerLabel.setText("All Products");
+            }
+        });
 
 
     }

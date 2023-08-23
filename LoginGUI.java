@@ -1,119 +1,121 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class LoginGUI extends JFrame {
-    private JTextField usernameField;
-    private JPasswordField passwordField;
+import java.awt.Font;
+import java.awt.event.*;  
+import static javax.swing.JOptionPane.showMessageDialog;
+public class LoginGUI implements ActionListener{  
+    
+	private JButton lgnBtn;
+    private JButton signBtn;
+    private JButton exBtn;
+    private JLabel lusn;
+    private JLabel welcom;
+    private JLabel lpass;
+    private JTextField uname;
+    private JPasswordField upass;
+	JFrame frame;
+	
+	//ASSOCIATION WITH USER CLASS
+	// User u1, u2;
+	// User users[];
+	
+    LoginGUI(){  
+	
+		// u1 = new User("Mazid", "1234");
+		// u2 = new User("ABCD", "9876");
+		// users = new User[4];
+		// users[0] = u1;
+		// users[1] = u2;
+		
+        //create frame
+		frame = new JFrame ("System");
+        //construct components
+        lgnBtn = new JButton ("Login");
+        signBtn = new JButton ("Sign Up");
+        exBtn = new JButton ("Exit");
+        lusn = new JLabel ("Username");
+        lpass = new JLabel ("Password");
+        welcom=new JLabel("Welcome");
+        uname = new JTextField ();
+        upass = new JPasswordField ();
 
-    public LoginGUI() {
-        setTitle("Grocery Shop Management System");
-        setSize(400, 300);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        
+		
+        welcom.setBounds (230, 10, 160, 30);		
+        lgnBtn.setBounds (150, 185, 140, 30);
+        exBtn.setBounds (300, 185, 140, 30);
+        lusn.setBounds (150, 105, 100, 25);
+        lpass.setBounds (150, 145, 100, 25);
+        uname.setBounds (300, 105, 140, 25);
+        upass.setBounds (300, 145, 140, 25);
 
-        // Create a color gradient background
-        setContentPane(new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                Color startColor = new Color(49, 100, 168);
-                Color endColor = new Color(15, 40, 80);
-                GradientPaint gradient = new GradientPaint(0, 0, startColor, getWidth(), getHeight(), endColor);
-                g2d.setPaint(gradient);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
+        welcom.setFont(new Font("times new roman", 0, 30));
+		
+		
+		//addActionListener
+		lgnBtn.addActionListener(this);
+
+        //add components
+        frame.add(welcom);
+        frame.add (lgnBtn);
+        frame.add (signBtn);
+        frame.add (exBtn);
+        frame.add (lusn);
+        frame.add (lpass);
+        frame.add (uname);
+        frame.add (upass);
+
+        
+		
+		//frame properties
+		//adjust size and set layout
+        frame.setSize (624, 400);
+		frame.setLocationRelativeTo(null);//to center screen gui
+        frame.setLayout (null);
+		frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane();
+        frame.setVisible (true); 
+    }         
+    public void actionPerformed(ActionEvent e) {  
+         
+        if(e.getSource()==lgnBtn)
+		{  
+			String user = uname.getText();
+			String pass = upass.getText();
+			//FOR SINGLE USER, NOT A SMART WAY!!
+			if(user.equals("Mazid") && pass.equals("1234"))
+			{
+				
+				new SellerDashboard();
+				frame.setVisible(false);
+				
+			}
+            else if(user.equals("a") && pass.equals("a")){
+				new DashboardWithSidebar();
+				frame.setVisible(false);
             }
-        });
-
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setOpaque(false);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-
-        JLabel titleLabel = new JLabel("Welcome");
-        titleLabel.setFont(new Font("Tahoma", Font.BOLD, 30));
-        titleLabel.setForeground(Color.WHITE);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        panel.add(titleLabel, gbc);
-
-        JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-        usernameLabel.setForeground(Color.WHITE);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        panel.add(usernameLabel, gbc);
-
-        usernameField = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        panel.add(usernameField, gbc);
-
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-        passwordLabel.setForeground(Color.WHITE);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        panel.add(passwordLabel, gbc);
-
-        passwordField = new JPasswordField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        panel.add(passwordField, gbc);
-
-        JButton loginButton = new JButton("Login");
-        loginButton.setBackground(new Color(0, 102, 0));
-        loginButton.setForeground(Color.WHITE);
-        loginButton.setFocusPainted(false);
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.LAST_LINE_END;
-        panel.add(loginButton, gbc);
-
-        JLabel statusLabel = new JLabel("");
-        statusLabel.setForeground(Color.RED);
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        panel.add(statusLabel, gbc);
-
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = usernameField.getText();
-                String password = new String(passwordField.getPassword());
-
-                if (validateCredentials(username, password)) {
-                    statusLabel.setForeground(new Color(0, 102, 0));
-                    statusLabel.setText("Login successful");
-                    // Open main application window here
-                } else {
-                    statusLabel.setForeground(Color.RED);
-                    statusLabel.setText("Invalid username or password");
-                }
-            }
-        });
-
-        setLayout(new BorderLayout());
-        add(panel);
-    }
-
-    private boolean validateCredentials(String username, String password) {
-        // Add your actual credential validation logic here
-        return username.equals("a") && password.equals("a");
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new LoginGUI().setVisible(true);
-            }
-        });
-    }
+				
+			else
+			{
+					showMessageDialog(null, "Invalid Username or password!");
+			}
+				
+			
+			//USING ARRAY FOR MULTIPLE USERS
+			// for(int i = 0; i<users.length; i++)
+			// {
+			// 	if(user.equals(users[i].getUsername()) && pass.equals(users[i].getPassword()))
+			// 	{
+			// 		flag = 1;
+			// 		break;
+			// 		//new Dashboard();
+			// 		//frame.setVisible(false);
+				
+			// 	}
+				
+			// }
+            
+			
+        }  
+    }  
 }

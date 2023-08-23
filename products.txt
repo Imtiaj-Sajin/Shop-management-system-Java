@@ -1,9 +1,2 @@
-111111,111111.0,1,Clothing,1
-name,45.0,3,Electronics,2247
-a,12.0,12,Electronics,12
-imam jainga,20.0,2,Clothing,3365
-alka,2222.0,2,Home Appliances,30
-sadf,99.0,3,Electronics,985
-fuck you,33.0,32,Electronics,2
-kaka,666.0,33,Electronics,8
-asdfdsaf,21.0,4,Electronics,4
+a, a,adf,2023-08-22,adsfasdf,asdfasd,fasdf
+asdf,22.0,22,Electronics,22

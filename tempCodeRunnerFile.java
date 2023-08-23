@@ -1,1 +1,1 @@
-productPanel
+new testPanel()

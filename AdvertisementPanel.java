@@ -14,12 +14,24 @@ import java.util.Map;
 
 public class AdvertisementPanel extends JPanel {
 
-     private DefaultTableModel defaultTableModel1;
+    private DefaultTableModel defaultTableModel1;
     private DefaultTableModel defaultTableModel2;
     private Map<String, Integer> productQuantities = new HashMap<>();
+    private Product[] products=new Product[100];
+    int ii=0;
+    JTextField quantityField = new JTextField(5);
+        JLabel nameLabel = new JLabel("Customer Name:");
+        JTextField nameField = new JTextField();
+
+        JLabel addressLabel = new JLabel("Customer Address:");
+        JTextField addressField = new JTextField();
+
+        JLabel phoneLabel = new JLabel("Customer Phone:");
+        JTextField phoneField = new JTextField();
 
     public AdvertisementPanel() {
         setLayout(new BorderLayout());
+
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel customerPanel = new JPanel(new GridLayout(3, 2, 10, 10));
@@ -30,14 +42,7 @@ public class AdvertisementPanel extends JPanel {
         JPanel checkoutPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         checkoutPanel.setBackground(Color.BLUE);
 
-        JLabel nameLabel = new JLabel("Customer Name:");
-        JTextField nameField = new JTextField();
 
-        JLabel addressLabel = new JLabel("Customer Address:");
-        JTextField addressField = new JTextField();
-
-        JLabel phoneLabel = new JLabel("Customer Phone:");
-        JTextField phoneField = new JTextField();
 
         JLabel searchLabel = new JLabel("Search Product:");
         JTextField searchField = new JTextField(15);
@@ -50,16 +55,17 @@ public class AdvertisementPanel extends JPanel {
 
         JLabel quantityLabel = new JLabel("Quantity:");
         JTextField quantityField = new JTextField(5);
+        quantityField.setText("0");
         JButton minusButton = new JButton("-");
         JButton plusButton = new JButton("+");
 
         // Create the defaultTableModel1 here
-        defaultTableModel1 = new DefaultTableModel(new String[]{"Product Name", "Price", "Quantity", "Category", "Id"}, 0);
+        defaultTableModel1 = new DefaultTableModel(new String[]{"Name", "Price", "Quantity", "Category", "Id"}, 0);
         JTable defaultTableView1 = new JTable(defaultTableModel1);
         JScrollPane tableScrollPane1 = new JScrollPane(defaultTableView1);
 
         // Create the defaultTableModel2 here
-        defaultTableModel2 = new DefaultTableModel(new String[]{"Product Name", "Price", "Quantity", "Category", "Id"}, 0);
+        defaultTableModel2 = new DefaultTableModel(new String[]{"Name", "Price", "Quantity", "Category", "Id"}, 0);
         JTable defaultTableView2 = new JTable(defaultTableModel2);
         JScrollPane tableScrollPane2 = new JScrollPane(defaultTableView2);
 
@@ -139,6 +145,7 @@ public class AdvertisementPanel extends JPanel {
                     for (int col = 0; col < defaultTableModel1.getColumnCount(); col++) {
                         rowData[col] = defaultTableModel1.getValueAt(selectedRow, col);
                     }
+                    rowData[2]=quantityField.getText();
 
                     defaultTableModel2.addRow(rowData);
 
@@ -152,12 +159,15 @@ public class AdvertisementPanel extends JPanel {
         // Checkout button listener
         checkoutButton.addActionListener(new ActionListener() {
             @Override
+            
             public void actionPerformed(ActionEvent e) {
+                String s="";
                 for (String productName : productQuantities.keySet()) {
                     int quantityToReduce = productQuantities.get(productName);
                     reduceProductQuantityInFile(productName, quantityToReduce);
+                    s=formatMatchingProductData(defaultTableModel2);
                 }
-                JOptionPane.showMessageDialog(null, "Checkout successful. Product quantities updated.", "Checkout", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, s, "Checkout", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         // Read product data from file and populate the table
@@ -202,9 +212,15 @@ private void reduceProductQuantityInFile(String productName, int quantityToReduc
                 for (int col = 0; col < defaultTableModel1.getColumnCount(); col++) {
                     rowData[col] = defaultTableModel1.getValueAt(row, col);
                 }
+
+                rowData[2]=1;
+                JOptionPane.showMessageDialog(this, rowData[2], quantityField.getText(), JOptionPane.INFORMATION_MESSAGE);
+
                 defaultTableModel2.addRow(rowData);
-                JOptionPane.showMessageDialog(this, "Product found and added to cart!", "Product Found", JOptionPane.INFORMATION_MESSAGE);
-                return; // Stop searching after finding the product
+                //JOptionPane.showMessageDialog(this, "Product found and added to cart!", "Product Found", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(this, rowData[2], quantityField.getText(), JOptionPane.INFORMATION_MESSAGE);
+
+                return; 
             }
         }
         JOptionPane.showMessageDialog(this, "Product not found.", "Product Not Found", JOptionPane.WARNING_MESSAGE);
@@ -218,6 +234,8 @@ private void reduceProductQuantityInFile(String productName, int quantityToReduc
                 String[] productInfo = line.split(",");
                 if (productInfo.length >= 5) {
                     tableModel.addRow(productInfo);
+                    // products[ii]=new Product(Integer.parseInt(productInfo[4]), productInfo[0], Double.parseDouble(productInfo[1]),  Integer.parseInt(productInfo[2]), productInfo[3]);
+                    // ii++;
                 }
             }
             reader.close();
@@ -233,6 +251,48 @@ private void reduceProductQuantityInFile(String productName, int quantityToReduc
             frame.setSize(800, 600);
             frame.add(new AdvertisementPanel());
             frame.setVisible(true);
-        });
-    }
+    });
+}
+public String formatMatchingProductData(DefaultTableModel defaultTableModel) {
+    StringBuilder formattedData = new StringBuilder();
+
+    // Append header
+    formattedData.append("id        \tname      \tprice     \tquantity        \tcost\n");
+    formattedData.append("_____________________________________________\n");
+
+    // Iterate through rows in the table model
+    for (int row = 0; row < defaultTableModel.getRowCount(); row++) {
+        String productName = (String) defaultTableModel.getValueAt(row, 0);
+            // Add row data to formattedData
+            for (int col = 0; col < defaultTableModel.getColumnCount(); col++) {
+                Object value = defaultTableModel.getValueAt(row, col);
+                if (value instanceof Integer) {
+                    formattedData.append((Integer) value).append("      \t");
+                } else if (value instanceof Double) {
+                    formattedData.append((Double) value).append("        \t");
+                } else {
+                    formattedData.append("-\t"); // Placeholder for non-numeric values
+                }
+            }
+            formattedData.append("\n");
+
+            // Add name and address information
+            String name = nameField.getText();
+            String address = addressField.getText();
+            String phone = phoneField.getText();
+
+            formattedData.append("name:").append(name).append("\n");
+            formattedData.append("address:").append(address).append("\n");
+            formattedData.append("phone:").append(phone).append("\n");
+
+
+            // Add separator
+            formattedData.append("----------------------------\n");
+        }
+    
+
+    return formattedData.toString();
+}
+
+
 }

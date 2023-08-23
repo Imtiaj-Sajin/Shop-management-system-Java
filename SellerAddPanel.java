@@ -112,7 +112,7 @@ public class SellerAddPanel extends JPanel {
 
     private void writeSellersToFile() {
         try {
-            FileWriter writer = new FileWriter("sellers.txt");
+            FileWriter writer = new FileWriter("sellers.txt", true); // Open in append mode
             for (Seller seller : sellers) {
                 String line = String.format("%s,%s,%s,%s,%s,%s,%s",
                         seller.name, seller.userId, seller.password,
@@ -125,6 +125,7 @@ public class SellerAddPanel extends JPanel {
             e.printStackTrace();
         }
     }
+    
 
     // Seller class
     static class Seller {

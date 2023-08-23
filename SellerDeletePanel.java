@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SellerUpdatePanel extends JPanel {
+public class SellerDeletePanel extends JPanel {
 
     private JTable table;
     private List<String[]> sellers;
 
-    public SellerUpdatePanel() {
+    public SellerDeletePanel() {
         setLayout(new BorderLayout());
         setBackground(new Color(240, 240, 240)); // Light gray background
 
@@ -43,39 +43,33 @@ public class SellerUpdatePanel extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Remove border
         add(scrollPane, BorderLayout.CENTER);
 
-        JButton updateButton = new JButton("Update Selected Seller");
-        updateButton.setBackground(new Color(60, 179, 113)); // Medium Sea Green color
-        updateButton.addActionListener(new ActionListener() {
+        JButton deleteButton = new JButton("Delete Selected seller");
+        deleteButton.setBackground(new Color(220, 20, 60)); // Crimson red color
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) {
-                    String[] selectedSeller = sellers.get(selectedRow);
-                    String modifiedName = JOptionPane.showInputDialog("Enter modified name:", selectedSeller[0]);
-                    String modifiedUserId = JOptionPane.showInputDialog("Enter modified user ID:", selectedSeller[1]);
-                    String modifiedPassword = JOptionPane.showInputDialog("Enter modified password:", selectedSeller[2]);
-                    String modifiedBirthdate = JOptionPane.showInputDialog("Enter modified birthdate:", selectedSeller[3]);
-                    String modifiedAddress = JOptionPane.showInputDialog("Enter modified address:", selectedSeller[4]);
-                    String modifiedPhone = JOptionPane.showInputDialog("Enter modified phone:", selectedSeller[5]);
-                    String modifiedEmail = JOptionPane.showInputDialog("Enter modified email:", selectedSeller[6]);
+                    int confirmResult = JOptionPane.showConfirmDialog(
+                            SellerDeletePanel.this,
+                            "Are you sure you want to delete this seller?",
+                            "Confirm Deletion",
+                            JOptionPane.YES_NO_OPTION
+                    );
 
-                    selectedSeller[0] = modifiedName;
-                    selectedSeller[1] = modifiedUserId;
-                    selectedSeller[2] = modifiedPassword;
-                    selectedSeller[3] = modifiedBirthdate;
-                    selectedSeller[4] = modifiedAddress;
-                    selectedSeller[5] = modifiedPhone;
-                    selectedSeller[6] = modifiedEmail;
-
-                    updateTableData(tableModel);
-                    writesellersToFile();
+                    if (confirmResult == JOptionPane.YES_OPTION) {
+                        sellers.remove(selectedRow);
+                        updateTableData(tableModel);
+                        writesellersToFile();
+                    }
                 }
             }
         });
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBackground(new Color(240, 240, 240)); // Light gray background
-        buttonPanel.add(updateButton);
+        buttonPanel.add(deleteButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -113,14 +107,5 @@ public class SellerUpdatePanel extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Seller Update Panel");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new SellerUpdatePanel());
-        frame.pack();
-        frame.setLocationRelativeTo(null); // Center the frame on the screen
-        frame.setVisible(true);
     }
 }

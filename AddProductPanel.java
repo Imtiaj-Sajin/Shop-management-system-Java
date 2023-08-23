@@ -13,23 +13,39 @@ public class AddProductPanel extends JPanel {
         JPanel inputPanel = new JPanel(new GridLayout(6, 2, 10, 10));
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JLabel nameLabel = new JLabel("Product Name:");
+        Font labelFont = new Font("Tahoma", Font.PLAIN, 18); // Larger font for labels
+        Font fieldFont = new Font("Tahoma", Font.PLAIN, 16); // Larger font for input fields
+        Font buttonFont = new Font("Tahoma", Font.BOLD, 18); // Larger and bold font for buttons
+
+        JLabel nameLabel = new JLabel(" Product Name:");
+        nameLabel.setFont(labelFont); // Apply the larger font
         JTextField nameField = new JTextField();
+        nameField.setFont(fieldFont); // Apply the larger font to the input field
 
-        JLabel priceLabel = new JLabel("Price:");
+        JLabel priceLabel = new JLabel(" Price:");
+        priceLabel.setFont(labelFont); // Apply the larger font
         JTextField priceField = new JTextField();
+        priceField.setFont(fieldFont); // Apply the larger font to the input field
 
-        JLabel quantityLabel = new JLabel("Quantity:");
+        JLabel quantityLabel = new JLabel(" Quantity:");
+        quantityLabel.setFont(labelFont); // Apply the larger font
         JTextField quantityField = new JTextField();
+        quantityField.setFont(fieldFont); // Apply the larger font to the input field
 
-        JLabel categoryLabel = new JLabel("Category:");
+        JLabel categoryLabel = new JLabel(" Category:");
+        categoryLabel.setFont(labelFont); // Apply the larger font
         JComboBox<String> categoryComboBox = new JComboBox<>(new String[]{"Electronics", "Clothing", "Home Appliances", "Books"});
+        categoryComboBox.setFont(fieldFont); // Apply the larger font to the combo box
 
-        JLabel idLabel = new JLabel("Product ID:");
+        JLabel idLabel = new JLabel(" Product ID:");
+        idLabel.setFont(labelFont); // Apply the larger font
         JTextField idField = new JTextField();
+        idField.setFont(fieldFont); // Apply the larger font to the input field
 
         JButton addButton = new JButton("Add Product");
+        addButton.setFont(buttonFont); // Apply the larger and bold font
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(buttonFont); // Apply the larger and bold font
 
         inputPanel.add(nameLabel);
         inputPanel.add(nameField);
